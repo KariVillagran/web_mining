@@ -6,20 +6,22 @@ install.packages("wordcloud")
 
 # cargar librerias
 library(twitteR)
-library(tm)
-library(wordcloud)
 library(NLP)
+library(tm)
+library(RColorBrewer)
+library(wordcloud)
+
 
 # credenciales de conexion
-api_key <- "*"
-api_secret <- "*"
+api_key <- ""
+api_secret <- ""
 
-access_toke <- "*"
-access_toke_secr <- "*"
+access_toke <- ""
+access_toke_secr <- ""
 
-reqURL <- "https://api.twitter.com/oauth/request_token"
-access_token <- "https://api.twitter.com/oauth/access_token"
-auURL <- "https://api.twitter.com/oauth/authorize"
+reqURL <- ""
+access_token <- ""
+auURL <- ""
 
 setup_twitter_oauth(api_key,
                     api_secret,
@@ -27,8 +29,8 @@ setup_twitter_oauth(api_key,
                     access_toke_secr)
 
 
-# recolecta tweets de @camila_vallejo
-tweets = userTimeline("chilectra", 3200)
+# recolecta tweets de @alguien
+tweets = userTimeline("MedelPitbull", 3200)
 
 # vuelca la informacion de los tweets a un data frame
 df = twListToDF(tweets)
@@ -55,7 +57,7 @@ corpus = Corpus(VectorSource(txtclean))
 # convierte a minúsculas
 corpus = tm_map(corpus, tolower)
 # remueve palabras vacías (stopwords) en español
-corpus = tm_map(corpus, removeWords, c(stopwords("spanish"), "camila_vallejo"))
+corpus = tm_map(corpus, removeWords, c(stopwords("spanish"), "chilectra"))
 # carga archivo de palabras vacías personalizada y lo convierte a ASCII
 sw <- readLines("C:/stopwords.es.txt",encoding="UTF-8")
 sw = iconv(sw, to="ASCII//TRANSLIT")
@@ -63,6 +65,8 @@ sw = iconv(sw, to="ASCII//TRANSLIT")
 corpus = tm_map(corpus, removeWords, sw)
 # remove espacios en blanco extras
 corpus = tm_map(corpus, stripWhitespace)
+# Define como texto plano el documento
+corpus<- tm_map(corpus, PlainTextDocument)
 
 # crea una matriz de términos
 tdm <- TermDocumentMatrix(corpus)
